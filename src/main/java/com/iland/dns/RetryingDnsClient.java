@@ -1,11 +1,13 @@
 package com.iland.dns;
 
+import static com.iland.dns.Exceptions.lookupErrorMessage;
+import static com.iland.dns.Exceptions.throwNamingException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.naming.NamingException;
 
@@ -51,26 +53,11 @@ public class RetryingDnsClient implements DnsClient {
 		} catch (final RetryException e) {
 			logger.warn(lookupErrorMessage(name, recordTypes));
 		} catch (final ExecutionException e) {
-			Throwable rootCause = e;
-			while ((rootCause = rootCause.getCause()) != null) {
-				if (rootCause instanceof NamingException) {
-					throw (NamingException) rootCause;
-				}
-			}
-
+			throwNamingException(e);
 			logger.error(lookupErrorMessage(name, recordTypes), e);
 		}
 
 		return Arrays.asList();
-	}
-
-	static final String lookupErrorMessage(final String name,
-			final RecordType... recordTypes) {
-		final String recordTypeCsv =
-				Arrays.stream(recordTypes).map(RecordType::toString)
-						.collect(Collectors.joining(", "));
-
-		return String.format("lookup of '%s' (%s) failed", name, recordTypeCsv);
 	}
 
 	static Retryer<List<? extends DnsRecord>> createDefaultRetryer() {

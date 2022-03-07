@@ -292,7 +292,7 @@ public class MesosDnsClient {
 			RecordType... recordTypes) throws MesosDnsException {
 		try {
 			return dnsClient.lookup(name, recordTypes);
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new MesosDnsException(e);
 		}
 	}
@@ -308,7 +308,7 @@ public class MesosDnsClient {
 			throws MesosDnsException {
 		try {
 			return dnsClient.lookupServiceRecords(name);
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new MesosDnsException(e);
 		}
 	}
