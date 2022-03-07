@@ -111,14 +111,16 @@ class MesosDnsClientTest {
 				.forEach(System.out::println);
 		System.out.println();
 
-		System.out.println("getAgentFor:");
-		client.lookupAgentsFor("mesos", "marathon", "mesos-dns")
+		System.out.println("task service srv:");
+		client.lookupServiceRecordsForTaskService("mesos", "marathon", "foo", "http", Protocol.TCP)
+				.forEach(System.out::println);
+		client.lookupServiceRecordsForTaskService("mesos", "marathon", "foo", "http", Protocol.UDP)
 				.forEach(System.out::println);
 		System.out.println();
 
-		System.out.println("lookupFirst:");
-		client.lookupFirst("mesos", "marathon", "mesos-dns", RecordType.A)
-				.ifPresent(System.out::println);
+		System.out.println("getAgentFor:");
+		client.lookupAgentsFor("mesos", "marathon", "mesos-dns")
+				.forEach(System.out::println);
 		System.out.println();
 
 		System.out.println("lookup:");

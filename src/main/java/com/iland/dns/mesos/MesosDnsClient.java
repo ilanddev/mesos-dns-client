@@ -2,7 +2,6 @@ package com.iland.dns.mesos;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.naming.NamingException;
 
@@ -13,6 +12,11 @@ import com.iland.dns.Protocol;
 import com.iland.dns.RecordType;
 import com.iland.dns.SrvDnsRecord;
 
+/**
+ * A client for Mesos-DNS.
+ *
+ * @see <a href="https://mesosphere.github.io/mesos-dns/docs/naming.html">Service Naming</a>
+ */
 public class MesosDnsClient {
 
 	private final DnsClient dnsClient;
@@ -200,7 +204,10 @@ public class MesosDnsClient {
 	}
 
 	/**
-	 * Lookup a task's DNS Service records (SRV records).
+	 * Lookup a task's DNS Service records (SRV records). Please note that if
+	 * a task is running multiple services, this will return ambiguous SRV records
+	 * for each of them (provided that they use the same protocol). Please use
+	 * {@link #lookupServiceRecordsForTaskService} instead.
 	 *
 	 * @param domain    e.g. "mesos"
 	 * @param framework e.g. "marathon"
@@ -225,27 +232,30 @@ public class MesosDnsClient {
 	}
 
 	/**
-	 * Lookup and return the first of a task's DNS records.
+	 * Lookup a task's service, e.g. HTTP, DNS Service records (SRV records). This
+	 * is the preferred way of looking up the port for a given service.
 	 *
-	 * @param domain     e.g. "mesos"
-	 * @param framework  e.g. "marathon"
-	 * @param task       e.g. "mesos-dns"
-	 * @param recordType A record type to lookup
-	 * @return A list of {@link DnsRecord DNS records}
+	 * @param domain    e.g. "mesos"
+	 * @param framework e.g. "marathon"
+	 * @param task      e.g. "mesos-dns"
+	 * @param service   e.g. "http"
+	 * @param protocol  the protocol
+	 * @return a {@link List list} of {@link SrvDnsRecord SRV records} sorted by priority and weight
 	 * @throws MesosDnsException if the lookup fails
 	 */
-	public Optional<? extends DnsRecord> lookupFirst(final String domain,
-			final String framework, final String task, RecordType recordType)
-			throws MesosDnsException {
+	public List<SrvDnsRecord> lookupServiceRecordsForTaskService(
+			final String domain, final String framework, final String task,
+			final String service, final Protocol protocol) throws MesosDnsException {
 		Objects.requireNonNull(domain, "domain must not be null");
 		Objects.requireNonNull(framework, "framework must not be null");
 		Objects.requireNonNull(task, "task must not be null");
-		Objects.requireNonNull(recordType, "recordType must not be null");
+		Objects.requireNonNull(task, "service must not be null");
+		Objects.requireNonNull(protocol, "protocol must not be null");
 
-		final List<? extends DnsRecord> records =
-				lookup(domain, framework, task, recordType);
+		final String name = String.format("_%s._%s._%s.%s.%s", service, task,
+				protocol.name().toLowerCase(), framework, domain);
 
-		return records.isEmpty() ? Optional.empty() : Optional.of(records.get(0));
+		return lookupServiceRecords(name);
 	}
 
 	/**
