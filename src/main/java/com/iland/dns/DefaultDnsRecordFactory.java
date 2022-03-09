@@ -6,7 +6,7 @@ public class DefaultDnsRecordFactory implements DnsRecordFactory {
 	public DnsRecord createDnsRecord(final RecordType type, final String name,
 			final String value) {
 		return type == RecordType.SRV ?
-				SrvDnsRecord.create(type, name, value) :
+				SrvDnsRecord.create(name, value) :
 				new DnsRecord(type, name, value);
 	}
 

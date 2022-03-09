@@ -16,12 +16,7 @@ public class SrvDnsRecord extends DnsRecord {
 	 * @return a {@link SrvDnsRecord SRV record}
 	 * @throws IllegalArgumentException if the value can not be parsed
 	 */
-	public static SrvDnsRecord create(final RecordType type, final String name,
-			final String value) {
-		if (!RecordType.SRV.equals(type)) {
-			throw new IllegalArgumentException("type must be SRV");
-		}
-
+	public static SrvDnsRecord create(final String name, final String value) {
 		String regex = "(\\d+)\\s(\\d+)\\s(\\d+)\\s(.*)";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(value);
@@ -31,8 +26,8 @@ public class SrvDnsRecord extends DnsRecord {
 			final int port = Integer.parseInt(matcher.group(3));
 			final String target = matcher.group(4).trim();
 
-			return new SrvDnsRecord(type, name, value, priority, weight, port,
-					target);
+			return new SrvDnsRecord(RecordType.SRV, name, value, priority, weight,
+					port, target);
 		} else {
 			final String message =
 					String.format("SRV record \"%s\" could not be parsed", value);

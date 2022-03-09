@@ -50,8 +50,8 @@ class MesosDnsClientTest {
 	void lookupLeadingClusterServiceRecords()
 			throws NamingException, MesosDnsException {
 		when(dnsClient.lookupServiceRecords("_leader._tcp.mesos")).thenAnswer(
-				i -> Arrays.asList(SrvDnsRecord.create(RecordType.SRV, "leader.mesos",
-						"0 1 5050 leader.mesos.")));
+				i -> Arrays.asList(
+						SrvDnsRecord.create("leader.mesos", "0 1 5050 leader.mesos.")));
 
 		final List<SrvDnsRecord> serviceRecords =
 				client.lookupLeadingClusterServiceRecords("mesos", Protocol.TCP);
@@ -112,10 +112,10 @@ class MesosDnsClientTest {
 		System.out.println();
 
 		System.out.println("task service srv:");
-		client.lookupServiceRecordsForTaskService("mesos", "marathon", "foo", "http", Protocol.TCP)
-				.forEach(System.out::println);
-		client.lookupServiceRecordsForTaskService("mesos", "marathon", "foo", "http", Protocol.UDP)
-				.forEach(System.out::println);
+		client.lookupServiceRecordsForTaskService("mesos", "marathon", "foo",
+				"http", Protocol.TCP).forEach(System.out::println);
+		client.lookupServiceRecordsForTaskService("mesos", "marathon", "foo",
+				"http", Protocol.UDP).forEach(System.out::println);
 		System.out.println();
 
 		System.out.println("getAgentFor:");
