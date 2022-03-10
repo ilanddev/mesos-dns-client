@@ -46,13 +46,13 @@
         <snapshotRepository>
             <id>iland-maven-foss-snapshot</id>
             <url>
-                artifactregistry://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss-snapshot
+                https://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss-snapshot
             </url>
         </snapshotRepository>
         <repository>
             <id>iland-maven-foss</id>
             <url>
-                artifactregistry://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss
+                https://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss
             </url>
         </repository>
     </distributionManagement>
@@ -95,7 +95,7 @@
         <repository>
             <id>iland-maven-foss-snapshot</id>
             <url>
-                artifactregistry://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss-snapshot
+                https://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss-snapshot
             </url>
             <releases>
                 <enabled>false</enabled>
@@ -107,7 +107,7 @@
         <repository>
             <id>iland-maven-foss</id>
             <url>
-                artifactregistry://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss
+                https://us-central1-maven.pkg.dev/iland-software-engineering/iland-maven-foss
             </url>
             <releases>
                 <enabled>true</enabled>
@@ -167,13 +167,6 @@
             </plugins>
         </pluginManagement>
 
-        <extensions>
-            <extension>
-                <groupId>com.google.cloud.artifactregistry</groupId>
-                <artifactId>artifactregistry-maven-wagon</artifactId>
-                <version>${artifactregistry.version}</version>
-            </extension>
-        </extensions>
     </build>
 
 </project>
